@@ -132,6 +132,12 @@ class Puzzle:
     def CheckforMatchWithPattern(self, Row, Column):
         for StartRow in range(Row + 2, Row - 1, -1):
             for StartColumn in range(Column - 2, Column + 1):
+                if self.identified:
+                    for r, c in self.identified:
+                        if StartRow in range(r, c + 1) or StartColumn in range(
+                            r, c + 1
+                        ):
+                            return 0
                 try:
                     PatternString = ""
                     PatternString += self.__GetCell(StartRow, StartColumn).GetSymbol()
