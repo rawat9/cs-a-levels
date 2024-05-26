@@ -33,13 +33,11 @@ class Puzzle:
             self.__AllowedPatterns = []
             self.__AllowedSymbols = []
             self.__LoadPuzzle(args[0])
-            self.identified = []
         else:
             self.__Score = 0
             self.__SymbolsLeft = args[1]
             self.__GridSize = args[0]
             self.__Grid = []
-            self.identified = []
             for Count in range(1, self.__GridSize * self.__GridSize + 1):
                 if random.randrange(1, 101) < 90:
                     C = Cell()
@@ -162,8 +160,6 @@ class Puzzle:
                     for P in self.__AllowedPatterns:
                         CurrentSymbol = self.__GetCell(Row, Column).GetSymbol()
                         if P.MatchesPattern(PatternString, CurrentSymbol):
-                            print("WIN")
-                            self.identified.append((StartRow - 2, StartColumn + 2))
                             self.__GetCell(
                                 StartRow, StartColumn
                             ).AddToNotAllowedSymbols(CurrentSymbol)
