@@ -131,32 +131,83 @@ class Puzzle:
         for StartRow in range(Row + 2, Row - 1, -1):
             for StartColumn in range(Column - 2, Column + 1):
                 try:
+                    print("==================")
                     PatternString = ""
-                    PatternString += self.__GetCell(StartRow, StartColumn).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow, StartColumn + 1
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow, StartColumn + 2
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow - 1, StartColumn + 2
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow - 2, StartColumn + 2
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow - 2, StartColumn + 1
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow - 2, StartColumn
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow - 1, StartColumn
-                    ).GetSymbol()
-                    PatternString += self.__GetCell(
-                        StartRow - 1, StartColumn + 1
-                    ).GetSymbol()
+                    if StartRow <= self.__GridSize and StartColumn <= self.__GridSize:
+                        PatternString += self.__GetCell(
+                            StartRow, StartColumn
+                        ).GetSymbol()
+                        print(StartRow, StartColumn)
+
+                    if (
+                        StartRow <= self.__GridSize
+                        and StartColumn + 1 <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow, StartColumn + 1
+                        ).GetSymbol()
+                        print(StartRow, StartColumn + 1)
+                    if (
+                        StartRow <= self.__GridSize
+                        and StartColumn + 2 <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow, StartColumn + 2
+                        ).GetSymbol()
+                        print(StartRow, StartColumn + 2)
+                    if (
+                        StartRow - 1 <= self.__GridSize
+                        and StartColumn + 2 <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow - 1, StartColumn + 2
+                        ).GetSymbol()
+                        print(StartRow - 1, StartColumn + 2)
+                    if (
+                        StartRow - 2 <= self.__GridSize
+                        and StartColumn + 2 <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow - 2, StartColumn + 2
+                        ).GetSymbol()
+                        print(StartRow - 2, StartColumn + 2)
+
+                    if (
+                        StartRow - 2 <= self.__GridSize
+                        and StartColumn + 1 <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow - 2, StartColumn + 1
+                        ).GetSymbol()
+                        print(StartRow - 2, StartColumn + 1)
+
+                    if (
+                        StartRow - 2 <= self.__GridSize
+                        and StartColumn <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow - 2, StartColumn
+                        ).GetSymbol()
+                        print(StartRow - 2, StartColumn)
+
+                    if (
+                        StartRow - 1 <= self.__GridSize
+                        and StartColumn <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow - 1, StartColumn
+                        ).GetSymbol()
+                        print(StartRow - 1, StartColumn)
+
+                    if (
+                        StartRow - 1 <= self.__GridSize
+                        and StartColumn + 1 <= self.__GridSize
+                    ):
+                        PatternString += self.__GetCell(
+                            StartRow - 1, StartColumn + 1
+                        ).GetSymbol()
+                        print(StartRow - 1, StartColumn + 1)
+
                     for P in self.__AllowedPatterns:
                         CurrentSymbol = self.__GetCell(Row, Column).GetSymbol()
                         if P.MatchesPattern(PatternString, CurrentSymbol):
@@ -241,6 +292,7 @@ class Pattern:
                     return False
             except Exception as ex:
                 print(f"EXCEPTION in MatchesPattern: {ex}")
+                return False  # should bail out if exception is caught
 
         print(PatternString, self.__PatternSequence)
         return True
