@@ -84,6 +84,36 @@ class Puzzle:
         except:
             print("Puzzle not loaded")
 
+    def SavePuzzle(self, filename):
+        with open(f"{filename}.txt", mode="w") as file:
+            noOfSymbols = len(self.__AllowedSymbols)
+            noOfPatterns = len(self.__AllowedPatterns)
+            file.write(str(noOfSymbols) + "\n")
+            for symbol in self.__AllowedSymbols:
+                file.write(symbol + "\n")
+            file.write(str(noOfPatterns) + "\n")
+            for pattern in self.__AllowedPatterns:
+                file.write(
+                    str(pattern.GetSymbol())
+                    + ","
+                    + str(pattern.GetPatternSequence())
+                    + "\n"
+                )
+
+            file.write(str(self.__GridSize) + "\n")
+            for count in range(0, self.__GridSize * self.__GridSize):
+                # __SymbolsNotAllowed
+                cell = self.__Grid[count]
+                file.write(
+                    str(cell.GetSymbol())
+                    + ","
+                    + ",".join([symbol for symbol in cell.GetSymbolsNotAllowed()])
+                    + "\n"
+                )
+
+            file.write(str(self.__Score) + "\n")
+            file.write(str(self.__SymbolsLeft))
+
     def AttemptPuzzle(self):
         Finished = False
         while not Finished:
@@ -115,6 +145,14 @@ class Puzzle:
                     self.__Score += AmountToAddToScore
             if self.__SymbolsLeft == 0:
                 Finished = True
+            answer = ""
+            while not answer in ("y", "n"):
+                answer = input("Do you want to save the file?: ")
+                if answer == "y":
+                    filename = input("Enter the file name: ")
+                    self.SavePuzzle(filename)
+                elif answer == "n":
+                    pass
         print()
         self.DisplayPuzzle()
         print()
@@ -248,6 +286,9 @@ class Pattern:
     def GetPatternSequence(self):
         return self.__PatternSequence
 
+    def GetSymbol(self):
+        return self.__Symbol
+
 
 class Cell:
     def __init__(self):
@@ -280,6 +321,9 @@ class Cell:
 
     def UpdateCell(self):
         pass
+
+    def GetSymbolsNotAllowed(self):
+        return self.__SymbolsNotAllowed
 
 
 class BlockedCell(Cell):
