@@ -44,6 +44,18 @@ class Puzzle:
                 else:
                     C = BlockedCell()
                 self.__Grid.append(C)
+
+            emptyCell = [
+                index
+                for index in range(0, len(self.__Grid))
+                if self.__Grid[index].IsEmpty()
+            ]
+
+            five_random_cells = random.sample(emptyCell, k=5)
+            for index in five_random_cells:
+                C = DoublePointCell()
+                self.__Grid[index] = C
+
             self.__AllowedPatterns = []
             self.__AllowedSymbols = []
             QPattern = Pattern("Q", "QQ**Q**QQ")
@@ -131,6 +143,7 @@ class Puzzle:
         for StartRow in range(Row + 2, Row - 1, -1):
             for StartColumn in range(Column - 2, Column + 1):
                 try:
+                    matchedPatternCells = []
                     PatternString = ""
                     PatternString += self.__GetCell(StartRow, StartColumn).GetSymbol()
                     PatternString += self.__GetCell(
@@ -160,33 +173,41 @@ class Puzzle:
                     for P in self.__AllowedPatterns:
                         CurrentSymbol = self.__GetCell(Row, Column).GetSymbol()
                         if P.MatchesPattern(PatternString, CurrentSymbol):
-                            self.__GetCell(
-                                StartRow, StartColumn
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow, StartColumn + 1
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow, StartColumn + 2
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow - 1, StartColumn + 2
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow - 2, StartColumn + 2
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow - 2, StartColumn + 1
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow - 2, StartColumn
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow - 1, StartColumn
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
-                            self.__GetCell(
-                                StartRow - 1, StartColumn + 1
-                            ).AddToNotAllowedSymbols(CurrentSymbol)
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow, StartColumn)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow, StartColumn + 1)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow - 1, StartColumn + 2)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow, StartColumn + 2)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow - 2, StartColumn + 2)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow - 2, StartColumn + 1)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow - 2, StartColumn)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow - 1, StartColumn)
+                            )
+                            matchedPatternCells.append(
+                                self.__GetCell(StartRow - 1, StartColumn + 1)
+                            )
+
+                            for cell in matchedPatternCells:
+                                if cell.IsDouble():
+                                    cell.AddToNotAllowedSymbols(CurrentSymbol)
+                                    return 20
+
+                                cell.AddToNotAllowedSymbols(CurrentSymbol)
+
                             return 10
                 except:
                     pass
@@ -242,7 +263,6 @@ class Pattern:
             except Exception as ex:
                 print(f"EXCEPTION in MatchesPattern: {ex}")
 
-        print(PatternString, self.__PatternSequence)
         return True
 
     def GetPatternSequence(self):
@@ -281,6 +301,9 @@ class Cell:
     def UpdateCell(self):
         pass
 
+    def IsDouble(self):
+        return self._Symbol == "D"
+
 
 class BlockedCell(Cell):
     def __init__(self):
@@ -289,6 +312,15 @@ class BlockedCell(Cell):
 
     def CheckSymbolAllowed(self, SymbolToCheck):
         return False
+
+
+class DoublePointCell(Cell):
+    def __init__(self):
+        super(DoublePointCell, self).__init__()
+        self._Symbol = "D"
+
+    def IsDouble():
+        return True
 
 
 if __name__ == "__main__":
