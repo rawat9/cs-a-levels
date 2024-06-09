@@ -81,8 +81,35 @@ class Puzzle:
                         self.__Grid.append(C)
                 self.__Score = int(f.readline().rstrip())
                 self.__SymbolsLeft = int(f.readline().rstrip())
+
+                if self.TestForError1():
+                    raise "Error 1 occured"
+
+                if self.TestForError2():
+                    raise "Error 2 occured"
         except:
             print("Puzzle not loaded")
+
+    def TestForError1(self):
+        for c in range(1, self.__GridSize * self.__GridSize + 1):
+            if (
+                str(self.__Grid[c].GetSymbol()) != "@"
+                and self.__Score == 0
+                and len(self.__Grid[c].GetSymbolsNotAllowed()) > 0
+            ):
+                return True
+
+        return False
+
+    def TestForError2(self):
+        numberOfCells = 0
+        for c in range(1, self.__GridSize * self.__GridSize + 1):
+            if len(self.__Grid[c].GetSymbolsNotAllowed()) > 0:
+                numberOfCells += 1
+
+            return numberOfCells < self.__Score
+
+        return False
 
     def AttemptPuzzle(self):
         Finished = False
@@ -280,6 +307,9 @@ class Cell:
 
     def UpdateCell(self):
         pass
+
+    def GetSymbolsNotAllowed(self):
+        return self.__SymbolsNotAllowed
 
 
 class BlockedCell(Cell):
